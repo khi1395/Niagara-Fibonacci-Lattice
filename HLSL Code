@@ -1,0 +1,58 @@
+//////////////////////////////////////////////////////////////////////
+
+const int PointsPerCone = ArrangeInLine;
+
+//Modulo with spawncount
+float ID = UID - SpawnInfo.Count * floor(UID/SpawnInfo.Count);
+
+//making points with same ID;
+ID = floor(ID/PointsPerCone); 
+
+//fibonacci lattice
+const float GRatio = 1.618033;
+const float InitialAngle = (3.0 - sqrt(5.0)) * PI;
+const int NumP = SpawnInfo.Count/PointsPerCone;
+
+float theta = ID * InitialAngle;
+float phi = acos(1.0 - 2.0 * (ID + 1.0) / NumP);
+
+//Polar to 3D Cartisian
+float x = Radius * sin(phi) * cos(theta);
+float y = Radius * sin(phi) * sin(theta);
+float z = Radius * cos(phi);
+
+Position = float3(x,y,z) + SimulationPosition;
+
+//Create Normal
+float3 Norm = normalize(Position - SimulationPosition);
+
+//Create ID for points that are together;
+int Iterator_Num = UID - PointsPerCone*floor(UID/PointsPerCone);
+
+
+for(int i = 0; i<PointsPerCone ; i++)
+{
+    if (Iterator_Num == i)
+    Position += Norm*Spacing*Iterator_Num;
+}
+
+Color = float4(0,1,0,1);
+
+if(Iterator_Num == 0)
+Color=(1,0,0,1);
+
+
+
+//Ribbon ID
+RibbonID = ID+1;
+
+
+float PPC = PointsPerCone;
+ 
+//Ribbon Curveu
+Curveu = Iterator_Num/PPC;
+
+//Color Debugger
+Color = float4(Iterator_Num,ID,0,1);
+
+RibbonFacing=Norm;
